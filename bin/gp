@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+# Git push current branch
+
+branch = ARGV.length > 0 ? ARGV[0] : `git rev-parse --abbrev-ref HEAD`.chomp
+if branch == 'master'
+  puts "Ya Ganna push master! Yeah?"
+  if %w[y yes].include? gets.chomp.downcase
+    `git push -u origin #{branch}`
+  end
+else
+  `git push -u origin #{branch}`
+end
+
