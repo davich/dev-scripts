@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
+require 'cgi'
 
 # Open Buildkite builds for the current repo and branch
 
-repo = `git config --get remote.origin.url | sed -nE 's/.*\\.com[:\\/]?(.*)?/\\1/p' | sed -E 's/.git//'`.chomp
+repo = `git config --get remote.origin.url | sed -nE 's/.*\\.com[:\\/]?(.*)?/\\1/p' | sed -E 's/cultureamp/culture-amp/' | sed -E 's/.git//' | sed -E 's/_/-/g'`.chomp
 branch = ARGV.length > 0 ? ARGV[0] : `git rev-parse --abbrev-ref HEAD`.chomp
-`open https://buildkite.com/#{repo}/builds?branch=#{branch}`
+`open https://buildkite.com/#{repo}/builds?branch=#{CGI::escape(branch)}`

@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
+require 'cgi'
 
 # Open Github for the current repo and branch
 
 repo = `git config --get remote.origin.url | sed -nE 's/.*\\.com[:\\/]?(.*)?/\\1/p' | sed -E 's/.git//'`.chomp
 branch = ARGV.length > 0 ? ARGV[0] : `git rev-parse --abbrev-ref HEAD`.chomp
-`open https://github.com/#{repo}/compare/#{branch}?expand=1`
+`open https://github.com/#{repo}/compare/#{CGI::escape(branch)}?expand=1`
