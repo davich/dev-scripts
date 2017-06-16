@@ -1,11 +1,15 @@
 #!/usr/bin/env ruby
 
-require 'english'
-require 'rubocop'
-
 ADDED_OR_MODIFIED = /A|AM|^M/.freeze
 
+old_stash = `git rev-parse -q --verify refs/stash`
 system("git stash -k -q")
+new_stash = `git rev-parse -q --verify refs/stash`
+
+if old_stash == new_stash
+  puts "pre commit script: no changes to test"
+  exit 0
+end
 
 changed_files = `git status --porcelain`.split(/\n/).
     select { |file_name_with_status|
