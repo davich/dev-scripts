@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+old_stash = `git rev-parse -q --verify refs/stash`
+system("git stash -k -q")
+new_stash = `git rev-parse -q --verify refs/stash`
+
+if old_stash == new_stash
+  puts "pre commit script: no changes to test"
+  exit 0
+end
+
+result = `mix credo list --strict`
+exit_code = if result.include?("found no issues")
+  0
+else
+  puts result
+  -1
+end
+
+system("git reset --hard -q ; git stash pop --index -q")
+
+exit exit_code
